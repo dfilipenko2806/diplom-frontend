@@ -13,14 +13,14 @@ function logout() {
     location.href = "auth.html";
 }
 
-// ===== ЗАЩИТА СТРАНИЦ =====
+// защита страниц
 function protectPage() {
     if (!isAuth()) {
         location.href = "auth.html";
     }
 }
 
-// ===== ОБНОВЛЕНИЕ МЕНЮ =====
+// обновление меню
 function updateNavbar() {
     const authLink = document.getElementById("authLink");
     const logoutBtn = document.getElementById("logoutBtn");
