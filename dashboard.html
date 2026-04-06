@@ -1,15 +1,21 @@
 <h1>Мой портфель</h1>
 
-<input id="crypto" placeholder="bitcoin / ethereum">
-<input id="amount" placeholder="Количество">
-<input id="price" placeholder="Цена покупки">
-<button onclick="add()">Добавить</button>
+<div class="card">
+    <input id="crypto" placeholder="bitcoin / ethereum">
+    <input id="amount" placeholder="Количество">
+    <input id="price" placeholder="Цена покупки">
+    <button onclick="add()">Добавить</button>
+</div>
 
 <ul id="list"></ul>
 
 <script>
-const API = "http://localhost:3000";
+const API = "https://diplom-backend-vt6h.onrender.com";
 const token = localStorage.getItem("token");
+
+if (!token) {
+    location.href = "auth.html";
+}
 
 // ===== ДОБАВИТЬ =====
 async function add() {
@@ -17,7 +23,7 @@ async function add() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": token
+            "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
             crypto: crypto.value,
@@ -32,7 +38,9 @@ async function add() {
 // ===== ЗАГРУЗИТЬ =====
 async function load() {
     const res = await fetch(API + "/portfolio", {
-        headers: { "Authorization": token }
+        headers: {
+            "Authorization": "Bearer " + token
+        }
     });
 
     const data = await res.json();
@@ -41,7 +49,6 @@ async function load() {
 
     for (let item of data) {
         const price = await getPrice(item.crypto);
-
         const profit = ((price - item.buyPrice) * item.amount).toFixed(2);
 
         list.innerHTML += `
@@ -56,7 +63,10 @@ async function load() {
 
 // ===== ЦЕНА =====
 async function getPrice(crypto) {
-    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`);
+    const res = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`
+    );
+
     const data = await res.json();
     return data[crypto].usd;
 }
