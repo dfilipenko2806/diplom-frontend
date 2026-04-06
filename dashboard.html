@@ -1,23 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Кабинет</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+<h1>Криптовалюта</h1>
+
+<nav>
+<ul>
+    <li><a id="authLink" href="auth.html">Вход</a></li>
+
+    <li class="private"><a href="index.html">Главная</a></li>
+    <li class="private"><a href="about.html">О криптовалюте</a></li>
+    <li class="private"><a href="features.html">Анализ</a></li>
+    <li class="private"><a href="calculator.html">Калькулятор</a></li>
+    <li class="private"><a href="dashboard.html">Личный кабинет</a></li>
+
+    <li style="float:right;">
+        <button id="logoutBtn" onclick="logout()" style="display:none;">Выйти</button>
+    </li>
+</ul>
+</nav>
+</header>
+
+<main>
+
 <h1>Мой портфель</h1>
 
-<div class="card">
-    <input id="crypto" placeholder="bitcoin / ethereum">
-    <input id="amount" placeholder="Количество">
-    <input id="price" placeholder="Цена покупки">
-    <button onclick="add()">Добавить</button>
-</div>
+<input id="crypto" placeholder="bitcoin">
+<input id="amount" placeholder="Количество">
+<input id="price" placeholder="Цена">
+<button onclick="add()">Добавить</button>
 
 <ul id="list"></ul>
 
+</main>
+
+<script src="auth.js"></script>
+
 <script>
+protectPage();
+updateNavbar();
+
 const API = "https://diplom-backend-vt6h.onrender.com";
 const token = localStorage.getItem("token");
 
-if (!token) {
-    location.href = "auth.html";
-}
-
-// ===== ДОБАВИТЬ =====
 async function add() {
     await fetch(API + "/portfolio", {
         method: "POST",
@@ -35,7 +67,6 @@ async function add() {
     load();
 }
 
-// ===== ЗАГРУЗИТЬ =====
 async function load() {
     const res = await fetch(API + "/portfolio", {
         headers: {
@@ -54,14 +85,12 @@ async function load() {
         list.innerHTML += `
             <li>
                 ${item.crypto} | Кол-во: ${item.amount} | 
-                Цена сейчас: $${price} | 
-                Прибыль: $${profit}
+                Цена: $${price} | Прибыль: $${profit}
             </li>
         `;
     }
 }
 
-// ===== ЦЕНА =====
 async function getPrice(crypto) {
     const res = await fetch(
         `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`
@@ -73,3 +102,6 @@ async function getPrice(crypto) {
 
 load();
 </script>
+
+</body>
+</html>
