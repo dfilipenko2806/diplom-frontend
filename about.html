@@ -23,15 +23,20 @@
     <header>
         <h1>Криптовалюта</h1>
         <nav>
-            <ul>
-		<li><a href="auth.html">Вход</a></li>
-		<li><a href="dashboard.html">Личный кабинет</a></li>
-                <li><a href="index.html">Главная</a></li>
-                <li><a href="about.html">О криптовалюте</a></li>
-                <li><a href="features.html">Анализ</a></li>
-                <li><a href="calculator.html">Калькулятор</a></li>
-            </ul>
-        </nav>
+		<ul>
+    		<li><a id="authLink" href="auth.html">Вход</a></li>
+
+    		<li class="private"><a href="index.html">Главная</a></li>
+    		<li class="private"><a href="about.html">О криптовалюте</a></li>
+    		<li class="private"><a href="features.html">Анализ</a></li>
+    		<li class="private"><a href="calculator.html">Калькулятор</a></li>
+    		<li class="private"><a href="dashboard.html">Личный кабинет</a></li>
+
+    		<li style="float:right;">
+        		<button id="logoutBtn" onclick="logout()" style="display:none;">Выйти</button>
+    		</li>
+		</ul>
+		</nav>
     </header>
 
     <main>
