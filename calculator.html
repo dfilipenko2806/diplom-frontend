@@ -158,7 +158,7 @@
             }
 
             const finalCapital = capitalData[capitalData.length - 1];
-            document.getElementById("result").textContent = `Прогнозируемая сумма в ${crypto.charAt(0).toUpperCase() + crypto.slice(1)}: $${finalCapital.toFixed(2)}`;
+            document.getElementById("result").textContent = `Прогнозируемая сумма: $${finalCapital.toFixed(2)}`;
 
             drawCharts(labels, priceData, capitalData);
         }
