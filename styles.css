@@ -268,3 +268,12 @@ footer p {
     border-radius: 10px;
     margin-bottom: 20px;
 }
+
+#logoutBtn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
