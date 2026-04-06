@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Инвестиционный калькулятор</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Криптовалюта</h1>
+        <nav>
+            <ul>
+		<li><a href="auth.html">Вход</a></li>
+		<li><a href="dashboard.html">Личный кабинет</a></li>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О криптовалюте</a></li>
+                <li><a href="features.html">Анализ</a></li>
+                <li><a href="calculator.html">Калькулятор</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Инвестиционный калькулятор</h1>
+        <div class="calculator-container">
+            <label for="crypto">Криптовалюта:</label>
+            <select id="crypto">
+                <option value="bitcoin">Bitcoin</option>
+                <option value="ethereum">Ethereum</option>
+                <option value="dogecoin">Dogecoin</option>
+            </select>
+
+            <label for="startYear">Год начала инвестиций:</label>
+            <input type="number" id="startYear" placeholder="Например, 2015" />
+
+            <label for="endYear">Год окончания инвестиций:</label>
+            <input type="number" id="endYear" placeholder="Например, 2025" />
+
+            <label for="amount">Начальная сумма инвестиций ($):</label>
+            <input type="number" id="amount" placeholder="Например, 1000" />
+
+            <label for="monthly">Ежемесячное пополнение ($):</label>
+            <input type="number" id="monthly" placeholder="Например, 10" />
+
+            <button onclick="calculate()">Рассчитать</button>
+            <p id="result"></p>
+        </div>
+
+        <div style="width: 80%; margin: auto; margin-top: 50px;">
+            <h2>Изменение цены криптовалюты</h2>
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <div style="width: 80%; margin: auto; margin-top: 50px;">
+            <h2>Изменение капитала</h2>
+            <canvas id="capitalChart"></canvas>
+        </div>
+    </main>
+
+    <footer>
+        <p>© Филипенко Д.А. ИТП-31 2025</p>
+    </footer>
+
+    <script>
+        const cryptoPrices = {
+            bitcoin: {
+                "2010-H1": 0.08, "2010-H2": 0.25,
+                "2011-H1": 1, "2011-H2": 5,
+                "2012-H1": 6, "2012-H2": 13,
+                "2013-H1": 100, "2013-H2": 800,
+                "2014-H1": 500, "2014-H2": 320,
+                "2015-H1": 250, "2015-H2": 310,
+                "2016-H1": 430, "2016-H2": 580,
+                "2017-H1": 960, "2017-H2": 14000,
+                "2018-H1": 7500, "2018-H2": 3700,
+                "2019-H1": 10500, "2019-H2": 7200,
+                "2020-H1": 9000, "2020-H2": 29000,
+                "2021-H1": 48000, "2021-H2": 47000,
+                "2022-H1": 35000, "2022-H2": 16500,
+                "2023-H1": 23000, "2023-H2": 27000,
+                "2024-H1": 30000, "2024-H2": 32000,
+                "2025-H1": 35000, "2025-H2": 37000
+            },
+            ethereum: {
+                "2015-H1": 0.5, "2015-H2": 1,
+                "2016-H1": 7, "2016-H2": 10,
+                "2017-H1": 8, "2017-H2": 700,
+                "2018-H1": 800, "2018-H2": 140,
+                "2019-H1": 300, "2019-H2": 130,
+                "2020-H1": 250, "2020-H2": 730,
+                "2021-H1": 2200, "2021-H2": 3800,
+                "2022-H1": 2900, "2022-H2": 1200,
+                "2023-H1": 1700, "2023-H2": 1900,
+                "2024-H1": 2100, "2024-H2": 2300,
+                "2025-H1": 2500, "2025-H2": 2700
+            },
+            dogecoin: {
+                "2015-H1": 0.00008, "2015-H2": 0.0001,
+                "2016-H1": 0.00015, "2016-H2": 0.0002,
+                "2017-H1": 0.0004, "2017-H2": 0.001,
+                "2018-H1": 0.0015, "2018-H2": 0.002,
+                "2019-H1": 0.0023, "2019-H2": 0.0025,
+                "2020-H1": 0.003, "2020-H2": 0.004,
+                "2021-H1": 0.05, "2021-H2": 0.3,
+                "2022-H1": 0.12, "2022-H2": 0.07,
+                "2023-H1": 0.07, "2023-H2": 0.08,
+                "2024-H1": 0.1, "2024-H2": 0.12,
+                "2025-H1": 0.14, "2025-H2": 0.16
+            }
+        };
+
+        let priceChart, capitalChart;
+
+        function calculate() {
+            const crypto = document.getElementById("crypto").value;
+            const startYear = parseInt(document.getElementById("startYear").value);
+            const endYear = parseInt(document.getElementById("endYear").value);
+            const amount = parseFloat(document.getElementById("amount").value);
+            const monthly = parseFloat(document.getElementById("monthly").value);
+
+            if (isNaN(amount) || isNaN(monthly) || isNaN(startYear) || isNaN(endYear) || endYear <= startYear) {
+                document.getElementById("result").textContent = "Пожалуйста, введите все значения корректно.";
+                return;
+            }
+
+            const prices = cryptoPrices[crypto];
+            if (!prices) {
+                document.getElementById("result").textContent = "Нет данных для выбранной криптовалюты.";
+                return;
+            }
+
+            let totalCapital = amount;
+            const labels = [];
+            const priceData = [];
+            const capitalData = [];
+
+            const startPriceKey = `${startYear}-H1`;
+            const startPrice = prices[startPriceKey];
+            if (!startPrice) {
+                document.getElementById("result").textContent = "Нет данных для начального года.";
+                return;
+            }
+
+            for (let y = startYear; y <= endYear + 0.5; y += 0.5) {
+                const half = y % 1 === 0 ? "H1" : "H2";
+                const label = `${Math.floor(y)}-${half}`;
+                const price = prices[label];
+                if (!price) continue;
+
+                labels.push(label);
+                priceData.push(price);
+                totalCapital += monthly * 6;
+                capitalData.push(totalCapital * (price / startPrice));
+            }
+
+            const finalCapital = capitalData[capitalData.length - 1];
+            document.getElementById("result").textContent = `Прогнозируемая сумма в ${crypto.charAt(0).toUpperCase() + crypto.slice(1)}: $${finalCapital.toFixed(2)}`;
+
+            drawCharts(labels, priceData, capitalData);
+        }
+
+        function drawCharts(labels, priceData, capitalData) {
+            if (priceChart) priceChart.destroy();
+            if (capitalChart) capitalChart.destroy();
+
+            const priceCtx = document.getElementById('priceChart').getContext('2d');
+            const capitalCtx = document.getElementById('capitalChart').getContext('2d');
+
+            priceChart = new Chart(priceCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Цена ($)',
+                        data: priceData,
+                        borderColor: 'blue',
+                        backgroundColor: 'lightblue',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            capitalChart = new Chart(capitalCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Капитал ($)',
+                        data: capitalData,
+                        borderColor: 'green',
+                        backgroundColor: 'lightgreen',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

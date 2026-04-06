@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ криптовалюты</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Шапка -->
+    <header>
+        <h1>Криптовалюта</h1>
+        <nav>
+            <ul>
+		<li><a href="auth.html">Вход</a></li>
+		<li><a href="dashboard.html">Личный кабинет</a></li>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О криптовалюте</a></li>
+                <li><a href="features.html">Анализ</a></li>
+                <li><a href="calculator.html">Калькулятор</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <h1>Анализ криптовалюты</h1>
+        <div class="crypto-info">
+            <label for="crypto-select">Выберите криптовалюту:</label>
+            <select id="crypto-select">
+                <option value="bitcoin">Bitcoin</option>
+                <option value="ethereum">Ethereum</option>
+                <option value="dogecoin">Dogecoin</option>
+            </select>
+            <div id="crypto-details">
+                <p>Выберите криптовалюту для анализа</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="crypto-chart"></canvas>
+    </div>
+
+    <script>
+        let chart = null; // Глобальная переменная для хранения графика
+
+        // Функция для получения данных о криптовалюте (для отображения информации)
+        async function fetchCryptoData(cryptoId) {
+            const url = `https://api.coingecko.com/api/v3/coins/${cryptoId}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const detailsContainer = document.getElementById('crypto-details');
+                detailsContainer.innerHTML = `
+                    <h2>${data.name}</h2>
+                    <p><strong>Текущая цена:</strong> $${data.market_data.current_price.usd}</p>
+                    <p><strong>Рыночная капитализация:</strong> $${data.market_data.market_cap.usd}</p>
+                    <p><strong>24h изменение:</strong> ${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+                    <p><strong>Объем торгов за 24 часа:</strong> $${data.market_data.total_volume.usd}</p>
+                `;
+            } catch (error) {
+                console.error("Ошибка при получении данных", error);
+            }
+        }
+
+        // Функция для получения исторических данных для графика
+        async function fetchCryptoHistory(cryptoId) {
+            const url = `https://api.coingecko.com/api/v3/coins/${cryptoId}/market_chart?vs_currency=usd&days=7`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const labels = data.prices.map(price => {
+                    const date = new Date(price[0]);
+                    return date.toLocaleDateString();
+                });
+
+                const prices = data.prices.map(price => price[1]);
+
+                // Если график уже существует, уничтожаем его перед созданием нового
+                if (chart) {
+                    chart.destroy();
+                }
+
+                // Создаем новый график
+                const ctx = document.getElementById('crypto-chart').getContext('2d');
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: `${cryptoId.charAt(0).toUpperCase() + cryptoId.slice(1)} Price`,
+                            data: prices,
+                            borderColor: '#3498db',
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Дата'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Цена (USD)'
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Ошибка при получении данных для графика", error);
+            }
+        }
+
+        // Обработчик события изменения выбора криптовалюты
+        document.getElementById('crypto-select').addEventListener('change', (e) => {
+            const selectedCrypto = e.target.value;
+            fetchCryptoData(selectedCrypto); // Загружаем информацию о криптовалюте
+            fetchCryptoHistory(selectedCrypto); // Обновляем график
+        });
+
+        // Инициализация по умолчанию для Bitcoin
+        window.onload = () => {
+            const defaultCrypto = 'bitcoin';
+            fetchCryptoData(defaultCrypto);
+            fetchCryptoHistory(defaultCrypto);
+        }
+    </script>
+    <footer>
+        <p>&copy; Филипенко Д.А. ИТП-31 2025</p>
+    </footer>
+</body>
+
+</html>

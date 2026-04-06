@@ -1,0 +1,65 @@
+<h1>Мой портфель</h1>
+
+<input id="crypto" placeholder="bitcoin / ethereum">
+<input id="amount" placeholder="Количество">
+<input id="price" placeholder="Цена покупки">
+<button onclick="add()">Добавить</button>
+
+<ul id="list"></ul>
+
+<script>
+const API = "http://localhost:3000";
+const token = localStorage.getItem("token");
+
+// ===== ДОБАВИТЬ =====
+async function add() {
+    await fetch(API + "/portfolio", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token
+        },
+        body: JSON.stringify({
+            crypto: crypto.value,
+            amount: +amount.value,
+            buyPrice: +price.value
+        })
+    });
+
+    load();
+}
+
+// ===== ЗАГРУЗИТЬ =====
+async function load() {
+    const res = await fetch(API + "/portfolio", {
+        headers: { "Authorization": token }
+    });
+
+    const data = await res.json();
+
+    list.innerHTML = "";
+
+    for (let item of data) {
+        const price = await getPrice(item.crypto);
+
+        const profit = ((price - item.buyPrice) * item.amount).toFixed(2);
+
+        list.innerHTML += `
+            <li>
+                ${item.crypto} | Кол-во: ${item.amount} | 
+                Цена сейчас: $${price} | 
+                Прибыль: $${profit}
+            </li>
+        `;
+    }
+}
+
+// ===== ЦЕНА =====
+async function getPrice(crypto) {
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`);
+    const data = await res.json();
+    return data[crypto].usd;
+}
+
+load();
+</script>

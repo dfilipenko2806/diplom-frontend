@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <style>
+        .slider img {
+            width: 100%;
+            height: 400px;
+            /* Высота изображений, можно настроить по своему усмотрению */
+            object-fit: cover;
+            /* Обеспечивает равномерное заполнение изображения */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Криптовалюта</h1>
+        <nav>
+            <ul>
+		<li><a href="auth.html">Вход</a></li>
+		<li><a href="dashboard.html">Личный кабинет</a></li>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="about.html">О криптовалюте</a></li>
+                <li><a href="features.html">Анализ</a></li>
+                <li><a href="calculator.html">Калькулятор</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="slider">
+            <div><img src="картинки/1.jpg" alt="Crypto 1"></div>
+            <div><img src="картинки/2.jpg" alt="Crypto 2"></div>
+            <div><img src="картинки/3.jpg" alt="Crypto 3"></div>
+        </section>
+        <section class="welcome">
+            <h2>Добро пожаловать!</h2>
+            <p>Этот сайт посвящен разработке web-приложения для анализа криптовалют. Здесь вы найдете информацию о
+                проекте, его целях и функционале. Наше приложение поможет вам отслеживать динамику рынка, анализировать
+                цены и принимать обоснованные решения в мире криптовалют.</p>
+            <p>Мы стремимся предоставить вам самые актуальные данные, графики и прогнозы, чтобы вы могли быть в курсе
+                всех изменений на рынке. Благодаря нашему инструменту, вы сможете лучше понимать тенденции и
+                возможности, которые предлагает мир цифровых валют.</p>
+        </section>
+        <section class="goal">
+            <h2>Цель проекта</h2>
+            <p>Целью данного проекта является создание удобного и информативного инструмента для анализа рынка
+                криптовалют, который поможет пользователям принимать обоснованные решения. Мы хотим сделать анализ
+                криптовалют доступным и понятным для каждого, независимо от уровня знаний в этой области.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Филипенко Д.А. ИТП-31 2025</p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.slider').slick({
+                autoplay: true,
+                autoplaySpeed: 3000,
+                dots: true,
+                arrows: false
+            });
+        });
+    </script>
+</body>
+
+</html>
