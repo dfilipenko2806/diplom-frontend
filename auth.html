@@ -9,8 +9,10 @@
 <button onclick="login()">Вход</button>
 
 <script>
+const API = "https://diplom-backend-vt6h.onrender.com";
+
 async function register() {
-    await fetch("http://localhost:3000/register", {
+    await fetch(API + "/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -18,11 +20,12 @@ async function register() {
             password: regPass.value
         })
     });
+
     alert("Зарегистрирован");
 }
 
 async function login() {
-    const res = await fetch("http://localhost:3000/login", {
+    const res = await fetch(API + "/login", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -32,6 +35,7 @@ async function login() {
     });
 
     const data = await res.json();
+
     localStorage.setItem("token", data.token);
 
     location.href = "dashboard.html";
