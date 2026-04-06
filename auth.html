@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Вход</title>
+</head>
+
+<body>
+
 <h2>Регистрация</h2>
 <input id="regEmail" placeholder="Email">
 <input id="regPass" type="password" placeholder="Пароль">
@@ -8,8 +17,12 @@
 <input id="logPass" type="password" placeholder="Пароль">
 <button onclick="login()">Вход</button>
 
+<script src="auth.js"></script>
+
 <script>
-const API = "https://diplom-backend-vt6h.onrender.com";
+if (isAuth()) {
+    location.href = "index.html";
+}
 
 async function register() {
     await fetch(API + "/register", {
@@ -38,6 +51,9 @@ async function login() {
 
     localStorage.setItem("token", data.token);
 
-    location.href = "dashboard.html";
+    location.href = "index.html";
 }
 </script>
+
+</body>
+</html>
