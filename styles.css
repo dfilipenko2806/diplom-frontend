@@ -261,3 +261,10 @@ footer p {
     border-color: #3498db;
     outline: none;
 }
+
+.card {
+    background: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
