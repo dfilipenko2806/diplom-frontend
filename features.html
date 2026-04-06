@@ -50,23 +50,20 @@
 
         // Функция для получения данных о криптовалюте (для отображения информации)
         async function fetchCryptoData(cryptoId) {
-            const url = `https://api.coingecko.com/api/v3/coins/${cryptoId}`;
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
+    		const url = `https://api.coingecko.com/api/v3/coins/${cryptoId}`;
 
-                const detailsContainer = document.getElementById('crypto-details');
-                detailsContainer.innerHTML = `
-                    <h2>${data.name}</h2>
-                    <p><strong>Текущая цена:</strong> $${data.market_data.current_price.usd}</p>
-                    <p><strong>Рыночная капитализация:</strong> $${data.market_data.market_cap.usd}</p>
-                    <p><strong>24h изменение:</strong> ${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
-                    <p><strong>Объем торгов за 24 часа:</strong> $${data.market_data.total_volume.usd}</p>
-                `;
-            } catch (error) {
-                console.error("Ошибка при получении данных", error);
-            }
-        }
+    		const response = await fetch(url);
+    		const data = await response.json();
+
+    		const detailsContainer = document.getElementById('crypto-details');
+
+    		detailsContainer.innerHTML = `
+        		<h2>${data.name}</h2>
+        		<p><strong>Цена:</strong> $${data.market_data.current_price.usd}</p>
+        		<p><strong>Капитализация:</strong> $${data.market_data.market_cap.usd}</p>
+        		<p><strong>24h:</strong> ${data.market_data.price_change_percentage_24h.toFixed(2)}%</p>
+    		`;
+		}
 
         // Функция для получения исторических данных для графика
         async function fetchCryptoHistory(cryptoId) {
