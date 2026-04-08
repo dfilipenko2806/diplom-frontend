@@ -25,7 +25,7 @@ if (isAuth()) {
 }
 
 async function register() {
-    await fetch(API + "/register", {
+    const res = await fetch(API + "/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -34,7 +34,14 @@ async function register() {
         })
     });
 
-    alert("Зарегистрирован");
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.error || "Ошибка регистрации");
+        return;
+    }
+
+    alert("Успешная регистрация! Теперь войдите.");
 }
 
 async function login() {
