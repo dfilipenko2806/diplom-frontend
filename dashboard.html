@@ -69,6 +69,29 @@ const token = localStorage.getItem("token");
 
 async function add() {
     try {
+        // 🔒 проверка токена
+        if (!token) {
+            alert("Вы не авторизованы");
+            location.href = "auth.html";
+            return;
+        }
+
+        // 📥 получаем значения
+        const cryptoValue = crypto.value.trim().toLowerCase();
+        const amountValue = Number(amount.value);
+        const priceValue = Number(price.value);
+
+        // ❌ валидация
+        if (!cryptoValue || !amountValue || !priceValue) {
+            alert("Заполни все поля");
+            return;
+        }
+
+        if (amountValue <= 0 || priceValue <= 0) {
+            alert("Количество и цена должны быть больше 0");
+            return;
+        }
+
         console.log("TOKEN:", token);
 
         const res = await fetch(API + "/portfolio", {
@@ -78,9 +101,9 @@ async function add() {
                 "Authorization": "Bearer " + token
             },
             body: JSON.stringify({
-                crypto: crypto.value,
-                amount: +amount.value,
-                buyPrice: +price.value
+                crypto: cryptoValue,
+                amount: amountValue,
+                buyPrice: priceValue
             })
         });
 
@@ -89,18 +112,20 @@ async function add() {
         console.log("RESPONSE:", data);
 
         if (!res.ok) {
-            alert(data.error || "Ошибка");
+            alert(data.error || "Ошибка добавления");
             return;
         }
 
+        // ✅ очистка полей
         crypto.value = "";
         amount.value = "";
         price.value = "";
 
+        // 🔄 обновляем список
         load();
 
     } catch (e) {
-        console.error(e);
+        console.error("Ошибка:", e);
         alert("Ошибка соединения с сервером");
     }
 }
