@@ -14,8 +14,8 @@ function logout() {
 }
 
 // защита страниц
-function protectPage() {
-    if (!isAuth()) {
+function protectPage(needAuth = true) {
+    if (needAuth && !isAuth()) {
         location.href = "auth.html";
     }
 }
