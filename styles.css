@@ -332,3 +332,44 @@ footer p {
 .auth-container button:hover {
     background: #2980b9;
 }
+
+/* PORTFOLIO */
+
+.portfolio-form {
+    max-width: 500px;
+    margin: 0 auto 30px;
+}
+
+.portfolio-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.portfolio-form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.portfolio-form button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.portfolio-list {
+    list-style: none;
+    padding: 0;
+}
+
+.portfolio-item {
+    display: flex;
+    justify-content: space-between;
+    background: #ecf0f1;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
