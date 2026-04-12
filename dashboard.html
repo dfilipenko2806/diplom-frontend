@@ -33,8 +33,8 @@
 
 <div class="card portfolio-form">
 
-    <label>Криптовалюта</label>
-    <input id="crypto" placeholder="bitcoin">
+    <label>Криптовалюта (btc, eth, sol)</label>
+    <input id="crypto" placeholder="например: btc">
 
     <label>Количество</label>
     <input id="amount" type="number" placeholder="Например: 0.5">
@@ -47,10 +47,8 @@
 </div>
 
 <div class="card">
-
     <h2 style="margin-bottom: 15px;">Активы</h2>
     <ul id="list" class="portfolio-list"></ul>
-
 </div>
 
 </main>
@@ -67,26 +65,52 @@ updateNavbar();
 
 const token = localStorage.getItem("token");
 
+// 🔥 маппинг крипты
+const cryptoMap = {
+    btc: "bitcoin",
+    eth: "ethereum",
+    sol: "solana",
+    bnb: "binancecoin",
+    ton: "toncoin",
+    xrp: "ripple",
+    ada: "cardano",
+    doge: "dogecoin"
+};
+
+// 🔥 получение цены
+async function getPrice(crypto) {
+    try {
+        const res = await fetch(
+            `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`
+        );
+
+        const data = await res.json();
+        return data[crypto]?.usd || null;
+
+    } catch {
+        return null;
+    }
+}
+
+// 🔥 добавление
 async function add() {
     try {
-        // ✅ получаем элементы
         const cryptoInput = document.getElementById("crypto");
         const amountInput = document.getElementById("amount");
         const priceInput = document.getElementById("price");
 
-        // 🔒 проверка токена
         if (!token) {
             alert("Вы не авторизованы");
             location.href = "auth.html";
             return;
         }
 
-        // 📥 значения
-        const cryptoValue = cryptoInput.value.trim().toLowerCase();
+        let cryptoValue = cryptoInput.value.trim().toLowerCase();
+        cryptoValue = cryptoMap[cryptoValue] || cryptoValue;
+
         const amountValue = Number(amountInput.value);
         const priceValue = Number(priceInput.value);
 
-        // ❌ валидация
         if (!cryptoValue || !amountValue || !priceValue) {
             alert("Заполни все поля");
             return;
@@ -94,6 +118,14 @@ async function add() {
 
         if (amountValue <= 0 || priceValue <= 0) {
             alert("Количество и цена должны быть больше 0");
+            return;
+        }
+
+        // 🔴 проверка существования крипты
+        const testPrice = await getPrice(cryptoValue);
+
+        if (!testPrice) {
+            alert("Криптовалюта не найдена ❌");
             return;
         }
 
@@ -117,7 +149,6 @@ async function add() {
             return;
         }
 
-        // ✅ очистка
         cryptoInput.value = "";
         amountInput.value = "";
         priceInput.value = "";
@@ -130,6 +161,7 @@ async function add() {
     }
 }
 
+// 🔥 загрузка портфеля
 async function load() {
     const res = await fetch(API + "/portfolio", {
         headers: {
@@ -142,7 +174,10 @@ async function load() {
     list.innerHTML = "";
 
     for (let item of data) {
-        const price = await getPrice(item.crypto);
+
+        if (!item.crypto) continue;
+
+        const price = await getPrice(item.crypto) || 0;
         const profit = ((price - item.buyPrice) * item.amount).toFixed(2);
 
         const color = profit >= 0 ? "green" : "red";
@@ -163,15 +198,6 @@ async function load() {
             </li>
         `;
     }
-}
-
-async function getPrice(crypto) {
-    const res = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${crypto}&vs_currencies=usd`
-    );
-
-    const data = await res.json();
-    return data[crypto]?.usd || 0;
 }
 
 load();
