@@ -69,24 +69,41 @@ const API = "https://diplom-backend-vt6h.onrender.com";
 const token = localStorage.getItem("token");
 
 async function add() {
-    await fetch(API + "/portfolio", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({
-            crypto: crypto.value,
-            amount: +amount.value,
-            buyPrice: +price.value
-        })
-    });
+    try {
+        console.log("TOKEN:", token);
 
-    crypto.value = "";
-    amount.value = "";
-    price.value = "";
+        const res = await fetch(API + "/portfolio", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                crypto: crypto.value,
+                amount: +amount.value,
+                buyPrice: +price.value
+            })
+        });
 
-    load();
+        const data = await res.json();
+
+        console.log("RESPONSE:", data);
+
+        if (!res.ok) {
+            alert(data.error || "Ошибка");
+            return;
+        }
+
+        crypto.value = "";
+        amount.value = "";
+        price.value = "";
+
+        load();
+
+    } catch (e) {
+        console.error(e);
+        alert("Ошибка соединения с сервером");
+    }
 }
 
 async function load() {
