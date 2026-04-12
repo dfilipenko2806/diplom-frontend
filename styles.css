@@ -277,3 +277,58 @@ footer p {
     border-radius: 5px;
     cursor: pointer;
 }
+
+/* AUTH PAGE */
+.auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background: #bdc3c7;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+}
+
+.tab.active {
+    background: #3498db;
+}
+
+.auth-container label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.auth-container button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #3498db;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-container button:hover {
+    background: #2980b9;
+}
