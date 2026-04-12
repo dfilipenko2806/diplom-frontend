@@ -69,6 +69,11 @@ const token = localStorage.getItem("token");
 
 async function add() {
     try {
+        // ✅ получаем элементы
+        const cryptoInput = document.getElementById("crypto");
+        const amountInput = document.getElementById("amount");
+        const priceInput = document.getElementById("price");
+
         // 🔒 проверка токена
         if (!token) {
             alert("Вы не авторизованы");
@@ -76,10 +81,10 @@ async function add() {
             return;
         }
 
-        // 📥 получаем значения
-        const cryptoValue = crypto.value.trim().toLowerCase();
-        const amountValue = Number(amount.value);
-        const priceValue = Number(price.value);
+        // 📥 значения
+        const cryptoValue = cryptoInput.value.trim().toLowerCase();
+        const amountValue = Number(amountInput.value);
+        const priceValue = Number(priceInput.value);
 
         // ❌ валидация
         if (!cryptoValue || !amountValue || !priceValue) {
@@ -91,8 +96,6 @@ async function add() {
             alert("Количество и цена должны быть больше 0");
             return;
         }
-
-        console.log("TOKEN:", token);
 
         const res = await fetch(API + "/portfolio", {
             method: "POST",
@@ -109,19 +112,16 @@ async function add() {
 
         const data = await res.json();
 
-        console.log("RESPONSE:", data);
-
         if (!res.ok) {
             alert(data.error || "Ошибка добавления");
             return;
         }
 
-        // ✅ очистка полей
-        crypto.value = "";
-        amount.value = "";
-        price.value = "";
+        // ✅ очистка
+        cryptoInput.value = "";
+        amountInput.value = "";
+        priceInput.value = "";
 
-        // 🔄 обновляем список
         load();
 
     } catch (e) {
