@@ -2,7 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Кабинет</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Личный кабинет</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -30,14 +31,33 @@
 
 <h1>Мой портфель</h1>
 
-<input id="crypto" placeholder="bitcoin">
-<input id="amount" placeholder="Количество">
-<input id="price" placeholder="Цена">
-<button onclick="add()">Добавить</button>
+<div class="card portfolio-form">
 
-<ul id="list"></ul>
+    <label>Криптовалюта</label>
+    <input id="crypto" placeholder="bitcoin">
+
+    <label>Количество</label>
+    <input id="amount" type="number" placeholder="Например: 0.5">
+
+    <label>Цена покупки ($)</label>
+    <input id="price" type="number" placeholder="Например: 30000">
+
+    <button onclick="add()">Добавить в портфель</button>
+
+</div>
+
+<div class="card">
+
+    <h2 style="margin-bottom: 15px;">Активы</h2>
+    <ul id="list" class="portfolio-list"></ul>
+
+</div>
 
 </main>
+
+<footer>
+<p>&copy; Филипенко Д.А. ИТП-31 2025</p>
+</footer>
 
 <script src="auth.js"></script>
 
@@ -62,6 +82,10 @@ async function add() {
         })
     });
 
+    crypto.value = "";
+    amount.value = "";
+    price.value = "";
+
     load();
 }
 
@@ -80,10 +104,21 @@ async function load() {
         const price = await getPrice(item.crypto);
         const profit = ((price - item.buyPrice) * item.amount).toFixed(2);
 
+        const color = profit >= 0 ? "green" : "red";
+
         list.innerHTML += `
-            <li>
-                ${item.crypto} | Кол-во: ${item.amount} | 
-                Цена: $${price} | Прибыль: $${profit}
+            <li class="portfolio-item">
+                <div>
+                    <strong>${item.crypto.toUpperCase()}</strong>
+                    <p>Кол-во: ${item.amount}</p>
+                </div>
+
+                <div>
+                    <p>Текущая цена: $${price}</p>
+                    <p style="color:${color}; font-weight:bold;">
+                        ${profit >= 0 ? "+" : ""}${profit} $
+                    </p>
+                </div>
             </li>
         `;
     }
@@ -95,7 +130,7 @@ async function getPrice(crypto) {
     );
 
     const data = await res.json();
-    return data[crypto].usd;
+    return data[crypto]?.usd || 0;
 }
 
 load();
