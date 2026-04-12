@@ -115,6 +115,24 @@ async function login() {
 
     location.href = "index.html";
 }
+
+    function switchTab(tab) {
+    const reg = document.getElementById("registerBlock");
+    const log = document.getElementById("loginBlock");
+    const tabs = document.querySelectorAll(".tab");
+
+    tabs.forEach(t => t.classList.remove("active"));
+
+    if (tab === "register") {
+        reg.style.display = "block";
+        log.style.display = "none";
+        tabs[0].classList.add("active");
+    } else {
+        reg.style.display = "none";
+        log.style.display = "block";
+        tabs[1].classList.add("active");
+    }
+}
 </script>
 
 <script>
