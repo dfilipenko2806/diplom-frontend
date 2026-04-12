@@ -2,20 +2,57 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Вход</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Авторизация</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<h2>Регистрация</h2>
-<input id="regEmail" placeholder="Email">
-<input id="regPass" type="password" placeholder="Пароль">
-<button onclick="register()">Регистрация</button>
+<header>
+    <h1>Криптовалюта</h1>
+    <nav>
+        <ul>
+            <li><a id="authLink" href="auth.html">Вход</a></li>
 
-<h2>Вход</h2>
-<input id="logEmail" placeholder="Email">
-<input id="logPass" type="password" placeholder="Пароль">
-<button onclick="login()">Вход</button>
+            <li class="private"><a href="index.html">Главная</a></li>
+            <li class="private"><a href="about.html">О криптовалюте</a></li>
+            <li class="private"><a href="features.html">Анализ</a></li>
+            <li class="private"><a href="calculator.html">Калькулятор</a></li>
+            <li class="private"><a href="dashboard.html">Личный кабинет</a></li>
+
+            <li style="float:right;">
+                <button id="logoutBtn" onclick="logout()" style="display:none;">Выйти</button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <h1>Авторизация</h1>
+
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+
+        <h2>Регистрация</h2>
+        <input id="regEmail" placeholder="Email">
+        <input id="regPass" type="password" placeholder="Пароль">
+        <button onclick="register()">Зарегистрироваться</button>
+
+        <hr style="margin: 25px 0;">
+
+        <h2>Вход</h2>
+        <input id="logEmail" placeholder="Email">
+        <input id="logPass" type="password" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+
+    </div>
+
+</main>
+
+<footer>
+    <p>&copy; Филипенко Д.А. ИТП-31 2025</p>
+</footer>
 
 <script src="auth.js"></script>
 
@@ -56,10 +93,20 @@ async function login() {
 
     const data = await res.json();
 
+    if (!res.ok) {
+        alert(data.error || "Ошибка входа");
+        return;
+    }
+
     localStorage.setItem("token", data.token);
 
     location.href = "index.html";
 }
+</script>
+
+<script>
+    protectPage(false); // разрешаем доступ без авторизации
+    updateNavbar();
 </script>
 
 </body>
