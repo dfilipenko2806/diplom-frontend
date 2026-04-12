@@ -10,11 +10,9 @@
 <body>
 
 <header>
-    <h1>Криптовалюта</h1>
+    <h1>Авторизация</h1>
     <nav>
         <ul>
-            <li><a id="authLink" href="auth.html">Вход</a></li>
-
             <li class="private"><a href="index.html">Главная</a></li>
             <li class="private"><a href="about.html">О криптовалюте</a></li>
             <li class="private"><a href="features.html">Анализ</a></li>
@@ -32,21 +30,36 @@
 
     <h1>Авторизация</h1>
 
-    <div class="card" style="max-width: 500px; margin: 0 auto;">
+    <div class="card auth-container">
 
-        <h2>Регистрация</h2>
-        <input id="regEmail" placeholder="Email">
-        <input id="regPass" type="password" placeholder="Пароль">
-        <button onclick="register()">Зарегистрироваться</button>
-
-        <hr style="margin: 25px 0;">
-
-        <h2>Вход</h2>
-        <input id="logEmail" placeholder="Email">
-        <input id="logPass" type="password" placeholder="Пароль">
-        <button onclick="login()">Войти</button>
-
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('register')">Регистрация</button>
+        <button class="tab" onclick="switchTab('login')">Вход</button>
     </div>
+
+    <!-- Регистрация -->
+    <div id="registerBlock">
+        <label>Email</label>
+        <input id="regEmail" type="email" placeholder="Введите email">
+
+        <label>Пароль</label>
+        <input id="regPass" type="password" placeholder="Введите пароль">
+
+        <button onclick="register()">Зарегистрироваться</button>
+    </div>
+
+    <!-- Вход -->
+    <div id="loginBlock" style="display:none;">
+        <label>Email</label>
+        <input id="logEmail" type="email" placeholder="Введите email">
+
+        <label>Пароль</label>
+        <input id="logPass" type="password" placeholder="Введите пароль">
+
+        <button onclick="login()">Войти</button>
+    </div>
+
+</div>
 
 </main>
 
